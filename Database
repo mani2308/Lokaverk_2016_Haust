@@ -1,0 +1,12 @@
+Database-inn settur upp í phpmyadmin
+
+drop database if exists 2308982439_lokaverk_2016h;
+create database 2308982439_lokaverk_2016h;
+use 2308982439_lokaverk_2016h;
+
+CREATE TABLE game
+(
+id int(5) NOT NULL PRIMARY KEY,
+score int(11) NOT NULL,
+time timestamp NOT NULL
+);
