@@ -1,2 +1,2 @@
 # Lokaverk_2016_Haust
-Leikur tengdur við database
+Python leikur sem er tengdur við database
