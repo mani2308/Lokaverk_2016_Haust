@@ -1,18 +1,18 @@
 import pymysql.cursors
 
 # Connect to the database
-connection = pymysql.connect(host='localhost',
-                             user='user',
-                             password='passwd',
-                             db='db',
+connection = pymysql.connect(host='tsuts.tskoli.is',
+                             user='2308982439',
+                             password='mypassword',
+                             db='2308982439_lokaverk_2016h',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
 try:
     with connection.cursor() as cursor:
         # Create a new record
-        sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
-        cursor.execute(sql, ('webmaster@python.org', 'very-secret'))
+        sql = "INSERT INTO `game` (`highscore`) VALUES (%s)"
+        cursor.execute(sql, (''))
 
     # connection is not autocommit by default. So you must commit to save
     # your changes.
@@ -20,8 +20,8 @@ try:
 
     with connection.cursor() as cursor:
         # Read a single record
-        sql = "SELECT `id`, `password` FROM `users` WHERE `email`=%s"
-        cursor.execute(sql, ('webmaster@python.org',))
+        sql = "SELECT `highscore` FROM `game`"
+        cursor.execute(sql, (''))
         result = cursor.fetchone()
         print(result)
 finally:
