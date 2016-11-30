@@ -27,6 +27,22 @@ try:
 finally:
     connection.close()
 
+#import sqlite3
+
+#conn = sqlite3.connect('2308982439_lokaverk_2016h.db')
+#c.conn.cursor()
+
+#def create_table():
+ #   c.execute('CREATE TABLE IF NOT EXISTS 2308982439_lokaverk_2016h(name CHAR, score INT, time TIMESTAMP)')
+
+#def data_entry():
+ #   c.execute("INSERT INTO 2308982439_lokaverk_2016h VALUES('eythor', '14117', '2016-11-30 16:05:00')")
+  #  conn.commit()
+   # c.close()
+    #conn.close()
+
+#data_entry()
+
 # Controles:
 #       Down - Kubbarnir fara hradar nidur
 # Left/Right - Faerir Kubbinn/ana til haegri/vinstri
@@ -331,5 +347,10 @@ if __name__ == '__main__':
     App = TetrisApp()
     App.run()
 
+
+    # highscore 29887
+    # highscore 19881
+    # highscore 14117
     # highscore 6760
-    # highscore 6760
+
+    SELECT * FROM game ORDER BY score DESC LIMIT 10
