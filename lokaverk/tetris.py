@@ -1,47 +1,4 @@
-import pymysql.cursors
-
-# Connect to the database
-connection = pymysql.connect(host='tsuts.tskoli.is',
-                             user='2308982439',
-                             password='mypassword',
-                             db='2308982439_lokaverk_2016h',
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
-
-try:
-    with connection.cursor() as cursor:
-        # Create a new record
-        sql = "INSERT INTO `game` (`highscore`) VALUES (%s)"
-        cursor.execute(sql, (''))
-
-    # connection is not autocommit by default. So you must commit to save
-    # your changes.
-    connection.commit()
-
-    with connection.cursor() as cursor:
-        # Read a single record
-        sql = "SELECT `highscore` FROM `game`"
-        cursor.execute(sql, (''))
-        result = cursor.fetchone()
-        print(result)
-finally:
-    connection.close()
-
-#import sqlite3
-
-#conn = sqlite3.connect('2308982439_lokaverk_2016h.db')
-#c.conn.cursor()
-
-#def create_table():
- #   c.execute('CREATE TABLE IF NOT EXISTS 2308982439_lokaverk_2016h(name CHAR, score INT, time TIMESTAMP)')
-
-#def data_entry():
- #   c.execute("INSERT INTO 2308982439_lokaverk_2016h VALUES('eythor', '14117', '2016-11-30 16:05:00')")
-  #  conn.commit()
-   # c.close()
-    #conn.close()
-
-#data_entry()
+from Testerino import Connection
 
 # Controles:
 #       Down - Kubbarnir fara hradar nidur
@@ -53,7 +10,43 @@ finally:
 
 from random import randrange as rand
 import pygame, sys
+import os
+import datetime
+import cPickle
 
+############################################### High score part 1 #############################################
+# just a constants we can use to define our score file location
+SCORES_FILE = "scores.pickle"
+
+def get_user_data():
+    time1 = datetime.datetime.now()
+    print "Current time:", time1.strftime("%d.%m.%Y, %H:%M")
+
+    a = None
+    while True:
+        a = raw_input("Enter weight: ")
+        try:
+            a = float(a)
+        except:
+            continue
+        else:
+            break
+
+    b = None
+    while True:
+        b = raw_input("Enter height: ")
+        try:
+            b = float(b)
+        except:
+            continue
+        else:
+            break
+
+    c = a/b
+
+    return ['', a, b, c, time1]
+
+#####################################################  THE GAME ########################################
 cell_size = 18
 cols = 10
 rows = 22
@@ -302,7 +295,7 @@ class TetrisApp(object):
         self.gameover = False
         self.paused = False
 
-        m = pygame.time.Clock()
+        dont_burn_my_cpu = pygame.time.Clock()
         while 1:
             self.screen.fill((0, 0, 0))
             if self.gameover:
@@ -337,20 +330,71 @@ Press space to continue""" % self.score)
                     self.quit()
                 elif event.type == pygame.KEYDOWN:
                     for key in key_actions:
-                        if event.key == eval("pygame.K_" + key):
+                        if event.key == eval("pygame.K_"
+                                                     + key):
                             key_actions[key]()
 
-            m.tick(maxfps)
+            dont_burn_my_cpu.tick(maxfps)
+##########################################################################################
 
+def read_high_scores():
+    # initialize an empty score file if it does
+    # not exist already, and return an empty list
+    if not os.path.isfile(SCORES_FILE):
+        write_high_scores([])
+        return []
+
+    with open(SCORES_FILE, 'r') as f:
+        scores = cPickle.load(f)
+    return scores
+
+def write_high_scores(scores):
+    with open(SCORES_FILE, 'w') as f:
+        cPickle.dump(scores, f)
+
+def update_scores(newScore, highScores):
+    # reuse an anonymous function for looking
+    # up the `c` (4th item) score from the object
+    key = lambda item: item[3]
+
+    # make a local copy of the scores
+    highScores = highScores[:]
+
+    lowest = None
+    if highScores:
+        lowest = min(highScores, key=key)
+
+    # only add the new score if the high scores
+    # are empty, or it beats the lowest one
+    if lowest is None or (newScore[3] > lowest[3]):
+        newScore[0] = raw_input("Enter name: ")
+        highScores.append(newScore)
+
+    # take only the highest 5 scores and return them
+    highScores.sort(key=key, reverse=True)
+    return highScores[:5]
+
+def print_high_scores(scores):
+    # loop over scores using enumerate to also
+    # get an int counter for printing
+    for i, score in enumerate(scores):
+        name, a, b, c, time1 = score
+        # #1    50.0    jdi    (20.12.2012, 15:02)
+        print "#%d\t%s\t%s\t(%s)" % \
+            (i+1, c, name, time1.strftime("%d.%m.%Y, %H:%M"))
+
+
+def main():
+    score = get_user_data()
+    highScores = read_high_scores()
+
+    highScores = update_scores(score, highScores)
+
+    write_high_scores(highScores)
+    print_high_scores(highScores)
 
 if __name__ == '__main__':
     App = TetrisApp()
     App.run()
 
-
-    # highscore 29887
-    # highscore 19881
-    # highscore 14117
     # highscore 6760
-
-    SELECT * FROM game ORDER BY score DESC LIMIT 10
