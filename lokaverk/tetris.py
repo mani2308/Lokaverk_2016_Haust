@@ -397,4 +397,4 @@ if __name__ == '__main__':
     App = TetrisApp()
     App.run()
 
-    # highscore 6760
+    # highscore 6760 :)
