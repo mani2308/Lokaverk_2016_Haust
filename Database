@@ -1,12 +1,9 @@
-Database-inn settur upp í phpmyadmin
-SQL
-
 -- phpMyAdmin SQL Dump
 -- version 4.0.8
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 02, 2016 at 01:45 PM
+-- Generation Time: Dec 02, 2016 at 02:59 PM
 -- Server version: 5.7.14-log
 -- PHP Version: 5.4.14
 
@@ -26,26 +23,58 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `game`
+-- Table structure for table `topplayers`
 --
 
-CREATE TABLE IF NOT EXISTS `game` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(25) NOT NULL,
-  `score` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+CREATE TABLE IF NOT EXISTS `topplayers` (
+  `playerID` int(11) NOT NULL AUTO_INCREMENT,
+  `playerName` varchar(75) DEFAULT NULL,
+  `playerPoints` int(11) DEFAULT NULL,
+  PRIMARY KEY (`playerID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
--- Dumping data for table `game`
+-- Dumping data for table `topplayers`
 --
 
-INSERT INTO `game` (`id`, `name`, `score`) VALUES
-(1, 'mani', 6760),
-(2, 'palli', 29887),
-(3, 'Eythor', 19760),
-(4, 'oli', 5000);
+INSERT INTO `topplayers` (`playerID`, `playerName`, `playerPoints`) VALUES
+(1, 'Toggi', 10),
+(2, 'Maggi', 9),
+(3, 'Vigga', 8),
+(4, 'Biggi', 7),
+(5, 'Bogga', 6),
+(6, 'Siggi', 5),
+(7, 'Maggi', 4),
+(8, 'Sigga', 3),
+(11, 'Nigga', 11),
+(12, 'Mani', 5009);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+########################### PROCEDURES ############################
+#drop procedure if exists AddPlayer $$
+#
+#create procedure AddPlayer(player_name varchar(75),player_points int)
+#begin
+#	declare lowest_points int;
+#    
+#	insert into TopPlayers(playerName,playerPoints)values(player_name,player_points);
+#    
+#    select min(playerPoints) into lowest_points from TopPlayers;
+#    
+#    delete from TopPlayers where playerPoints = lowest_points;
+#end $$
+#
+#drop procedure if exists DisplayTopScore $$
+#create procedure DisplayTopScore()
+#begin
+#	select * from TopPlayers order by playerPoints desc;
+#end $$
+#
+#delimiter ;
+#
+#call AddPlayer('Mani',5009);
+#call DisplayTopScore();
