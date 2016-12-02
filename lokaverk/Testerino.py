@@ -53,27 +53,27 @@ for x in texti:
 #SET SQL_SAFE_UPDATES = 0;
 
 
-drop procedure if exists AddPlayer $$
+#drop procedure if exists AddPlayer $$
 
-create procedure AddPlayer(player_name varchar(10),player_points int)
-begin
-	declare lowest_points int;
+#create procedure AddPlayer(player_name varchar(10),player_points int)
+#begin
+#	declare lowest_points int;
     
-	insert into TopPlayers(playerName,playerPoints)values(player_name,player_points);
+#	insert into TopPlayers(playerName,playerPoints)values(player_name,player_points);
     
-    select min(playerPoints) into lowest_points from TopPlayers;
+#    select min(playerPoints) into lowest_points from TopPlayers;
     
-    if count(playerName) > 9 then
-    delete from TopPlayers where playerPoints = lowest_points;
-    end if;
-end $$
+#    if count(playerName) > 9 then
+#    delete from TopPlayers where playerPoints = lowest_points;
+#    end if;
+#end $$
 
 
-drop procedure if exists DisplayTopScore $$
+#drop procedure if exists DisplayTopScore $$
 
-create procedure DisplayTopScore()
-begin
-	select * from TopPlayers order by playerPoints desc;
-end $$
+#create procedure DisplayTopScore()
+#begin
+#	select * from TopPlayers order by playerPoints desc;
+#end $$
 
-delimiter ;
+#delimiter ;
