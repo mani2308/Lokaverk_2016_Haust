@@ -1,4 +1,16 @@
+#delimiter $$
+#DROP PROCEDURE IF EXISTS insertinfo $$
+#CREATE PROCEDURE insertinfo(name,score,timeru)
+#begin
+#INSERT INTO game(name,score,timeru) 
+#VALUES ('scrub',2070,NOW());
+#IF count(name) > 9 then
+#	DELETE FROM game WHERE MIN(score)
+#end if;
+#END
+
 from Testerino import Connection
+
 from random import randrange as rand
 import pygame, sys
 import os
