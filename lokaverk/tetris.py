@@ -12,8 +12,10 @@
 #from Testerino import Connection
 
 from random import randrange as rand
+from Testerino import Connection
 import pygame, sys
 
+con = Connection()
 # Controles:
 #       Down - Kubbarnir fara hradar nidur
 # Left/Right - Faerir Kubbinn/ana til haegri/vinstri
@@ -116,10 +118,8 @@ class TetrisApp(object):
             pygame.font.get_default_font(), 12)
 
         self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.event.set_blocked(pygame.MOUSEMOTION)  # We do not need
-        # mouse movement
-        # events, so we
-        # block them.
+        pygame.event.set_blocked(pygame.MOUSEMOTION)
+
         self.next_stone = tetris_shapes[rand(len(tetris_shapes))]
         self.init_game()
 
@@ -135,12 +135,14 @@ class TetrisApp(object):
             self.gameover = True
 
     def init_game(self):
+        global player_name
         self.board = new_board()
         self.new_stone()
         self.level = 1
         self.score = 0
         self.lines = 0
         pygame.time.set_timer(pygame.USEREVENT + 1, 1000)
+        player_name = raw_input("What is your name?")
 
     def disp_msg(self, msg, topleft):
         x, y = topleft
@@ -258,6 +260,7 @@ class TetrisApp(object):
             self.gameover = False
 
     def run(self):
+        global player_name
         key_actions = {
             'ESCAPE': self.quit,
             'LEFT': lambda: self.move(-1),
@@ -278,6 +281,7 @@ class TetrisApp(object):
             if self.gameover:
                 self.center_msg("""Game Over!\nYour score: %d
 Press space to continue""" % self.score)
+                con.InsertExample(player_name, self.score)
             else:
                 if self.paused:
                     self.center_msg("Paused")
