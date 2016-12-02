@@ -2,20 +2,17 @@
 #DROP PROCEDURE IF EXISTS insertinfo $$
 #CREATE PROCEDURE insertinfo(name,score,timeru)
 #begin
-#INSERT INTO game(name,score,timeru) 
+#INSERT INTO game(name,score,timeru)
 #VALUES ('scrub',2070,NOW());
 #IF count(name) > 9 then
 #	DELETE FROM game WHERE MIN(score)
 #end if;
 #END
 
-from Testerino import Connection
+#from Testerino import Connection
 
 from random import randrange as rand
 import pygame, sys
-import os
-import datetime
-import cPickle
 
 # Controles:
 #       Down - Kubbarnir fara hradar nidur
@@ -24,40 +21,6 @@ import cPickle
 #     Escape - Endar leikinn
 #          P - Pasar leikinn
 #     Return - Kubburinn dettur beint nidur
-
-
-
-############################################### High score part 1 #############################################
-# just a constants we can use to define our score file location
-SCORES_FILE = "scores.pickle"
-
-def get_user_data():
-    time1 = datetime.datetime.now()
-    print "Current time:", time1.strftime("%d.%m.%Y, %H:%M")
-
-    a = None
-    while True:
-        a = raw_input("Enter weight: ")
-        try:
-            a = float(a)
-        except:
-            continue
-        else:
-            break
-
-    b = None
-    while True:
-        b = raw_input("Enter height: ")
-        try:
-            b = float(b)
-        except:
-            continue
-        else:
-            break
-
-    c = a/b
-
-    return ['', a, b, c, time1]
 
 #####################################################  Leikurinn ########################################
 cell_size = 18
@@ -100,15 +63,7 @@ tetris_shapes = [
      [7, 7]] # **
 ]
 
-def TopScores(self):
-    scores = conn.Display()
-    number = 90
-    pygmae.draw.rect(screen, (0, 0, 0), (590. 90, 450, 270))
-    for x in range(len(scores)):
-        texti = str(x + 1) + ". " + scores[x]
-        scorer = font.render(text, 1, (8, 255, 0))
-        pygame.Surface.blit(screen, scorer, (590, number))
-        number += 30
+
 
 def rotate_clockwise(shape):
     return [[shape[y][x]
@@ -331,9 +286,7 @@ Press space to continue""" % self.score)
                                      (255, 255, 255),
                                      (self.rlim + 1, 0),
                                      (self.rlim + 1, self.height - 1))
-                    self.disp_msg("Next:", (
-                        self.rlim + cell_size,
-                        2))
+                    self.disp_msg("Next:", (self.rlim + cell_size, 2))
                     self.disp_msg("Score: %d\n\nLevel: %d\
 \nLines: %d" % (self.score, self.level, self.lines),
                                   (self.rlim + cell_size, cell_size * 5))
@@ -357,63 +310,7 @@ Press space to continue""" % self.score)
                             key_actions[key]()
 
             dont_burn_my_cpu.tick(maxfps)
-##########################################################################################
 
-def read_high_scores():
-    # initialize an empty score file if it does
-    # not exist already, and return an empty list
-    if not os.path.isfile(SCORES_FILE):
-        write_high_scores([])
-        return []
-
-    with open(SCORES_FILE, 'r') as f:
-        scores = cPickle.load(f)
-    return scores
-
-def write_high_scores(scores):
-    with open(SCORES_FILE, 'w') as f:
-        cPickle.dump(scores, f)
-
-def update_scores(newScore, highScores):
-    # reuse an anonymous function for looking
-    # up the `c` (4th item) score from the object
-    key = lambda item: item[3]
-
-    # make a local copy of the scores
-    highScores = highScores[:]
-
-    lowest = None
-    if highScores:
-        lowest = min(highScores, key=key)
-
-    # only add the new score if the high scores
-    # are empty, or it beats the lowest one
-    if lowest is None or (newScore[3] > lowest[3]):
-        newScore[0] = raw_input("Enter name: ")
-        highScores.append(newScore)
-
-    # take only the highest 5 scores and return them
-    highScores.sort(key=key, reverse=True)
-    return highScores[:5]
-
-def print_high_scores(scores):
-    # loop over scores using enumerate to also
-    # get an int counter for printing
-    for i, score in enumerate(scores):
-        name, a, b, c, time1 = score
-        # #1    50.0    jdi    (20.12.2012, 15:02)
-        print "#%d\t%s\t%s\t(%s)" % \
-            (i+1, c, name, time1.strftime("%d.%m.%Y, %H:%M"))
-
-
-def main():
-    score = get_user_data()
-    highScores = read_high_scores()
-
-    highScores = update_scores(score, highScores)
-
-    write_high_scores(highScores)
-    print_high_scores(highScores)
 
 if __name__ == '__main__':
     App = TetrisApp()
