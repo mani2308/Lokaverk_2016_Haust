@@ -31,3 +31,10 @@ Hafði smá tíma bara til að reyna að finna út hvernig ætti að tengja data
 
 29.11.2016
 Unnið við að setja loka "touchið" við tetris leikinn
+
+1.12.2016
+Database tenging loksins tengist rétt og virkar. Unnið við að tengja almennilega við og senda gögn í gegn
+
+2.12.2016
+Haldið áfram með sama, vinna með tengingu á milli database og python. Búa til procedures þannig það auðveldi 
+notkun og virkni inni í pyhton
