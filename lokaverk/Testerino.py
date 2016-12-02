@@ -22,7 +22,7 @@ class Connection:
                                       database='2308982439_lokaverk_2016h')
 
         cursor = cnx.cursor()
-        query = "INSERT INTO `game`(`name`, `score`, `time`) VALUES('','','');"
+        query = "INSERT INTO `topplayers`(`playerID`, `playerName`, `playerScore`) VALUES('','','');"
         cursor.execute(query)
         cnx.commit()
         cursor.close()
@@ -34,10 +34,10 @@ class Connection:
                                       database='2308982439_lokaverk_2016h')
 
         cursor = cnx.cursor()
-        query = ("SELECT * FROM `game` WHERE 1;")
+        query = ("SELECT * FROM `topplayers` WHERE 1;")
         cursor.execute(query)
-        for name, score, time in cursor:
-            result.append(str(name) + ": " + str(score))
+        for playerID, playerName, playerScore in cursor:
+            result.append(str(playerName) + ": " + str(playerScore))
         cursor.close()
         cnx.close()
 
@@ -49,3 +49,31 @@ con = Connection()
 texti = con.Display()
 for x in texti:
     print(x)
+
+#SET SQL_SAFE_UPDATES = 0;
+
+
+drop procedure if exists AddPlayer $$
+
+create procedure AddPlayer(player_name varchar(10),player_points int)
+begin
+	declare lowest_points int;
+    
+	insert into TopPlayers(playerName,playerPoints)values(player_name,player_points);
+    
+    select min(playerPoints) into lowest_points from TopPlayers;
+    
+    if count(playerName) > 9 then
+    delete from TopPlayers where playerPoints = lowest_points;
+    end if;
+end $$
+
+
+drop procedure if exists DisplayTopScore $$
+
+create procedure DisplayTopScore()
+begin
+	select * from TopPlayers order by playerPoints desc;
+end $$
+
+delimiter ;
