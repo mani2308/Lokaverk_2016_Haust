@@ -88,6 +88,15 @@ tetris_shapes = [
      [7, 7]] # **
 ]
 
+def TopScores(self):
+    scores = conn.Display()
+    number = 90
+    pygmae.draw.rect(screen, (0, 0, 0), (590. 90, 450, 270))
+    for x in range(len(scores)):
+        texti = str(x + 1) + ". " + scores[x]
+        scorer = font.render(text, 1, (8, 255, 0))
+        pygame.Surface.blit(screen, scorer, (590, number))
+        number += 30
 
 def rotate_clockwise(shape):
     return [[shape[y][x]
