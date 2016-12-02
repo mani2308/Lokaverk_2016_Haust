@@ -1,4 +1,9 @@
 from Testerino import Connection
+from random import randrange as rand
+import pygame, sys
+import os
+import datetime
+import cPickle
 
 # Controles:
 #       Down - Kubbarnir fara hradar nidur
@@ -8,11 +13,7 @@ from Testerino import Connection
 #          P - Pasar leikinn
 #     Return - Kubburinn dettur beint nidur
 
-from random import randrange as rand
-import pygame, sys
-import os
-import datetime
-import cPickle
+
 
 ############################################### High score part 1 #############################################
 # just a constants we can use to define our score file location
@@ -46,7 +47,7 @@ def get_user_data():
 
     return ['', a, b, c, time1]
 
-#####################################################  THE GAME ########################################
+#####################################################  Leikurinn ########################################
 cell_size = 18
 cols = 10
 rows = 22
