@@ -22,7 +22,7 @@ class Connection:
                                       database='2308982439_lokaverk_2016h')
 
         cursor = cnx.cursor()
-        query = "INSERT INTO `game`(`name`, `score`, `time`) VALUES('oli','5000','2016-12-1 14:25:00');"
+        query = "INSERT INTO `game`(`name`, `score`, `time`) VALUES('','','');"
         cursor.execute(query)
         cnx.commit()
         cursor.close()
