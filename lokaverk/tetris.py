@@ -279,8 +279,7 @@ class TetrisApp(object):
         while 1:
             self.screen.fill((0, 0, 0))
             if self.gameover:
-                self.center_msg("""Game Over!\nYour score: %d
-Press space to continue""" % self.score)
+                self.center_msg("""Game Over!\nYour score: %d Press space to continue""" % self.score)
                 con.InsertExample(player_name, self.score)
             else:
                 if self.paused:
@@ -292,7 +291,7 @@ Press space to continue""" % self.score)
                                      (self.rlim + 1, self.height - 1))
                     self.disp_msg("Next:", (self.rlim + cell_size, 2))
                     self.disp_msg("Score: %d\n\nLevel: %d\
-\nLines: %d" % (self.score, self.level, self.lines),
+                                    \nLines: %d" % (self.score, self.level, self.lines),
                                   (self.rlim + cell_size, cell_size * 5))
                     self.draw_matrix(self.bground_grid, (0, 0))
                     self.draw_matrix(self.board, (0, 0))
