@@ -1,20 +1,8 @@
-#delimiter $$
-#DROP PROCEDURE IF EXISTS insertinfo $$
-#CREATE PROCEDURE insertinfo(name,score,timeru)
-#begin
-#INSERT INTO game(name,score,timeru)
-#VALUES ('scrub',2070,NOW());
-#IF count(name) > 9 then
-#	DELETE FROM game WHERE MIN(score)
-#end if;
-#END
-
-#from Testerino import Connection
-
 from random import randrange as rand
 from Testerino import Connection
 import pygame, sys
 
+#con = Connection(self.score, player_name)
 con = Connection()
 # Controles:
 #       Down - Kubbarnir fara hradar nidur
@@ -22,9 +10,9 @@ con = Connection()
 #         Up - Snyr Kubbunum 90 gradur til haegri
 #     Escape - Endar leikinn
 #          P - Pasar leikinn
-#     Return - Kubburinn dettur beint nidur
+#     Enter - Kubburinn dettur beint nidur
 
-#####################################################  Leikurinn ########################################
+#####################################################  Breytur ######################################
 cell_size = 18
 cols = 10
 rows = 22
@@ -318,5 +306,3 @@ class TetrisApp(object):
 if __name__ == '__main__':
     App = TetrisApp()
     App.run()
-
-    # highscore 6760 :)
