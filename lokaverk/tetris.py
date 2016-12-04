@@ -1,9 +1,8 @@
 from random import randrange as rand
-from Testerino import Connection
+#from Testerino import Connection
 import pygame, sys
 
 #con = Connection(self.score, player_name)
-con = Connection()
 # Controles:
 #       Down - Kubbarnir fara hradar nidur
 # Left/Right - Faerir Kubbinn/ana til haegri/vinstri
@@ -12,13 +11,13 @@ con = Connection()
 #          P - Pasar leikinn
 #     Enter - Kubburinn dettur beint nidur
 
-#####################################################  Breytur ######################################
-cell_size = 18
-cols = 10
-rows = 22
-maxfps = 30
+#####################################################  Leikurinn ########################################
+cellular_size = 18
+dalkar = 10
+radir = 22
+Manar_a_sek = 30
 
-colors = [
+litir = [
     (0, 0, 0),
     (255, 85, 85),
     (100, 200, 115),
@@ -31,7 +30,7 @@ colors = [
 ]
 
 # Skilgreinir formin a "kubbunum"
-tetris_shapes = [
+tetris_form = [
     [[1, 1, 1],  #***
      [0, 1, 0]], # *
 
@@ -55,82 +54,82 @@ tetris_shapes = [
 
 
 
-def rotate_clockwise(shape):
-    return [[shape[y][x]
-             for y in xrange(len(shape))]
-            for x in xrange(len(shape[0]) - 1, -1, -1)]
+def snua_rettsaelis(form):
+    return [[form[y][x]
+             for y in xrange(len(form))]
+            for x in xrange(len(form[0]) - 1, -1, -1)]
 
 
-def check_collision(board, shape, offset):
+def check_collision(spilavollur, form, offset):
     off_x, off_y = offset
-    for cy, row in enumerate(shape):
+    for cy, row in enumerate(form):
         for cx, cell in enumerate(row):
             try:
-                if cell and board[cy + off_y][cx + off_x]:
+                if cell and spilavollur[cy + off_y][cx + off_x]:
                     return True
             except IndexError:
                 return True
     return False
 
 
-def remove_row(board, row):
-    del board[row]
-    return [[0 for i in xrange(cols)]] + board
+def remove_dis_row(spilavollur, row):
+    del spilavollur[row]
+    return [[0 for i in xrange(dalkar)]] + spilavollur
 
 
 def join_matrixes(mat1, mat2, mat2_off):
     off_x, off_y = mat2_off
     for cy, row in enumerate(mat2):
-        for cx, val in enumerate(row):
+        for cx, val in enumerate(row):                  # hjalp af netinu ;)
             mat1[cy + off_y - 1][cx + off_x] += val
     return mat1
 
 
-def new_board():
-    board = [[0 for x in xrange(cols)]
-             for y in xrange(rows)]
-    board += [[1 for x in xrange(cols)]]
-    return board
+def nyr_spilavollur():
+    spilavollur = [[0 for x in xrange(dalkar)]
+             for y in xrange(radir)]
+    spilavollur += [[1 for x in xrange(dalkar)]]
+    return spilavollur
 
 
 class TetrisApp(object):
     def __init__(self):
         pygame.init()
         pygame.key.set_repeat(250, 25)
-        self.width = cell_size * (cols + 6)
-        self.height = cell_size * rows
-        self.rlim = cell_size * cols
-        self.bground_grid = [[8 if x % 2 == y % 2 else 0 for x in xrange(cols)] for y in xrange(rows)]
+        self.breidd = cellular_size * (dalkar + 6)
+        self.haed = cellular_size * radir
+        self.rlim = cellular_size * dalkar
+        self.bground_grid = [[8 if x % 2 == y % 2 else 0 for x in xrange(dalkar)] for y in xrange(radir)]
 
         self.default_font = pygame.font.Font(
             pygame.font.get_default_font(), 12)
 
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.event.set_blocked(pygame.MOUSEMOTION)
+        self.screen = pygame.display.set_mode((self.breidd, self.haed))
+        pygame.event.set_blocked(pygame.MOUSEMOTION)                    #blockar fyrir musina
 
-        self.next_stone = tetris_shapes[rand(len(tetris_shapes))]
+        self.next_stone = tetris_form[rand(len(tetris_form))]
         self.init_game()
 
-    def new_stone(self):
+    def gimme_a_new_stone(self):
         self.stone = self.next_stone[:]
-        self.next_stone = tetris_shapes[rand(len(tetris_shapes))]
-        self.stone_x = int(cols / 2 - len(self.stone[0]) / 2)
+        self.next_stone = tetris_form[rand(len(tetris_form))]
+        self.stone_x = int(dalkar / 2 - len(self.stone[0]) / 2)
         self.stone_y = 0
 
-        if check_collision(self.board,
+        if check_collision(self.spilavollur,
                            self.stone,
                            (self.stone_x, self.stone_y)):
             self.gameover = True
 
     def init_game(self):
-        global player_name
-        self.board = new_board()
-        self.new_stone()
+     #   global player_name
+        self.spilavollur = nyr_spilavollur()
+        self.gimme_a_new_stone()
         self.level = 1
         self.score = 0
         self.lines = 0
         pygame.time.set_timer(pygame.USEREVENT + 1, 1000)
-        player_name = raw_input("What is your name?")
+       # player_name = raw_input("What is your name?") bidur leikmanninn um nafn
 
     def disp_msg(self, msg, topleft):
         x, y = topleft
@@ -154,24 +153,24 @@ class TetrisApp(object):
             msgim_center_y //= 2
 
             self.screen.blit(msg_image, (
-                self.width // 2 - msgim_center_x,
-                self.height // 2 - msgim_center_y + i * 22))
+                self.breidd // 2 - msgim_center_x,
+                self.haed // 2 - msgim_center_y + i * 22))
 
-    def draw_matrix(self, matrix, offset):
+    def teikna_voll(self, vollur, offset):
         off_x, off_y = offset
-        for y, row in enumerate(matrix):
+        for y, row in enumerate(vollur):
             for x, val in enumerate(row):
                 if val:
                     pygame.draw.rect(
                         self.screen,
-                        colors[val],
+                        litir[val],
                         pygame.Rect(
                             (off_x + x) *
-                            cell_size,
+                            cellular_size,
                             (off_y + y) *
-                            cell_size,
-                            cell_size,
-                            cell_size), 0)
+                            cellular_size,
+                            cellular_size,
+                            cellular_size), 0)
 
     def add_cl_lines(self, n):
         linescores = [0, 40, 100, 300, 1200]
@@ -188,15 +187,15 @@ class TetrisApp(object):
             new_x = self.stone_x + delta_x
             if new_x < 0:
                 new_x = 0
-            if new_x > cols - len(self.stone[0]):
-                new_x = cols - len(self.stone[0])
-            if not check_collision(self.board,
+            if new_x > dalkar - len(self.stone[0]):
+                new_x = dalkar - len(self.stone[0])
+            if not check_collision(self.spilavollur,
                                    self.stone,
                                    (new_x, self.stone_y)):
                 self.stone_x = new_x
 
-    def quit(self):
-        self.center_msg("Exiting...")
+    def enda_leik(self):
+        self.center_msg("Endar leik...")
         pygame.display.update()
         sys.exit()
 
@@ -204,25 +203,25 @@ class TetrisApp(object):
         if not self.gameover and not self.paused:
             self.score += 1 if manual else 0
             self.stone_y += 1
-            if check_collision(self.board,
+            if check_collision(self.spilavollur,
                                self.stone,
                                (self.stone_x, self.stone_y)):
-                self.board = join_matrixes(
-                    self.board,
+                self.spilavollur = join_matrixes(
+                    self.spilavollur,
                     self.stone,
                     (self.stone_x, self.stone_y))
-                self.new_stone()
-                cleared_rows = 0
+                self.gimme_a_new_stone()
+                hreinsadar_radir = 0
                 while True:
-                    for i, row in enumerate(self.board[:-1]):
+                    for i, row in enumerate(self.spilavollur[:-1]):
                         if 0 not in row:
-                            self.board = remove_row(
-                                self.board, i)
-                            cleared_rows += 1
+                            self.spilavollur = remove_dis_row(
+                                self.spilavollur, i)
+                            hreinsadar_radir += 1
                             break
                     else:
                         break
-                self.add_cl_lines(cleared_rows)
+                self.add_cl_lines(hreinsadar_radir)
                 return True
         return False
 
@@ -233,31 +232,32 @@ class TetrisApp(object):
 
     def rotate_stone(self):
         if not self.gameover and not self.paused:
-            new_stone = rotate_clockwise(self.stone)
-            if not check_collision(self.board,
-                                   new_stone,
+            gimme_a_new_stone = snua_rettsaelis(self.stone)
+            if not check_collision(self.spilavollur,
+                                   gimme_a_new_stone,
                                    (self.stone_x, self.stone_y)):
-                self.stone = new_stone
+                self.stone = gimme_a_new_stone
 
     def toggle_pause(self):
         self.paused = not self.paused
 
+######### Run the goddamn game already ;) ###################################
     def start_game(self):
         if self.gameover:
             self.init_game()
             self.gameover = False
 
     def run(self):
-        global player_name
+     #   global player_name
         key_actions = {
-            'ESCAPE': self.quit,
+            'ESCAPE': self.enda_leik,
             'LEFT': lambda: self.move(-1),
             'RIGHT': lambda: self.move(+1),
             'DOWN': lambda: self.drop(True),
             'UP': self.rotate_stone,
             'p': self.toggle_pause,
             'SPACE': self.start_game,
-            'RETURN': self.insta_drop
+            'RETURN': self.insta_drop # thetta er enter takkinn,
         }
 
         self.gameover = False
@@ -267,40 +267,45 @@ class TetrisApp(object):
         while 1:
             self.screen.fill((0, 0, 0))
             if self.gameover:
-                self.center_msg("""Game Over!\nYour score: %d Press space to continue""" % self.score)
-                con.InsertExample(player_name, self.score)
+                self.center_msg("""Leik Lokid!\nStigin thin: %d
+Yttu a space til ad halda afram""" % self.score)
+            #    player_score = self.score
+            #    global player_score
+            #    con.InsertExample(player_name, player_score)
+
             else:
                 if self.paused:
-                    self.center_msg("Paused")
+                    self.center_msg("""Leikur pasadur
+                    Yttu a 'p' til ad halda afram""")
                 else:
                     pygame.draw.line(self.screen,
                                      (255, 255, 255),
                                      (self.rlim + 1, 0),
-                                     (self.rlim + 1, self.height - 1))
-                    self.disp_msg("Next:", (self.rlim + cell_size, 2))
-                    self.disp_msg("Score: %d\n\nLevel: %d\
-                                    \nLines: %d" % (self.score, self.level, self.lines),
-                                  (self.rlim + cell_size, cell_size * 5))
-                    self.draw_matrix(self.bground_grid, (0, 0))
-                    self.draw_matrix(self.board, (0, 0))
-                    self.draw_matrix(self.stone,
+                                     (self.rlim + 1, self.haed - 1))
+                    self.disp_msg("Next up:", (self.rlim + cellular_size, 2))
+                    self.disp_msg("Stig: %d\n\nBord: %d\
+\nLinur: %d" % (self.score, self.level, self.lines),
+                                  (self.rlim + cellular_size, cellular_size * 5))
+                    self.teikna_voll(self.bground_grid, (0, 0))
+                    self.teikna_voll(self.spilavollur, (0, 0))
+                    self.teikna_voll(self.stone,
                                      (self.stone_x, self.stone_y))
-                    self.draw_matrix(self.next_stone,
-                                     (cols + 1, 2))
+                    self.teikna_voll(self.next_stone,
+                                     (dalkar + 1, 2))
             pygame.display.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.USEREVENT + 1:
                     self.drop(False)
                 elif event.type == pygame.QUIT:
-                    self.quit()
+                    self.enda_leik()
                 elif event.type == pygame.KEYDOWN:
                     for key in key_actions:
                         if event.key == eval("pygame.K_"
                                                      + key):
                             key_actions[key]()
 
-            dont_burn_my_cpu.tick(maxfps)
+            dont_burn_my_cpu.tick(Manar_a_sek)
 
 
 if __name__ == '__main__':
