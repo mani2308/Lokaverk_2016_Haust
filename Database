@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 02, 2016 at 02:59 PM
+-- Generation Time: Dec 04, 2016 at 10:19 PM
 -- Server version: 5.7.14-log
 -- PHP Version: 5.4.14
 
@@ -20,6 +20,54 @@ SET time_zone = "+00:00";
 -- Database: `2308982439_lokaverk_2016h`
 --
 
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`2308982439`@`%` PROCEDURE `AddPlayer`(player_name varchar(75),player_points int)
+begin
+	declare lowest_points int;
+    
+	insert into TopPlayers(playerName,playerPoints)values(player_name,player_points);
+    
+    select min(playerPoints) into lowest_points from TopPlayers;
+    
+    delete from TopPlayers where playerPoints = lowest_points;
+end$$
+
+CREATE DEFINER=`2308982439`@`%` PROCEDURE `CreateAndInitializeTestTable`()
+begin
+	drop table if exists TopPlayers;
+
+	create table TopPlayers
+	(
+		playerID int auto_increment,
+		playerName varchar(75),
+		playerPoints int,
+		constraint player_PK primary key(playerID)
+	);
+
+	insert into TopPlayers(playerName,playerPoints)values('Toggi',10);
+	insert into TopPlayers(playerName,playerPoints)values('Maggi',9);
+	insert into TopPlayers(playerName,playerPoints)values('Vigga',8);
+	insert into TopPlayers(playerName,playerPoints)values('Biggi',7);
+	insert into TopPlayers(playerName,playerPoints)values('Bogga',6);
+	insert into TopPlayers(playerName,playerPoints)values('Siggi',5);
+	insert into TopPlayers(playerName,playerPoints)values('Maggi',4);
+	insert into TopPlayers(playerName,playerPoints)values('Sigga',3);
+	insert into TopPlayers(playerName,playerPoints)values('Viggi',2);
+	insert into TopPlayers(playerName,playerPoints)values('Magga',1);
+end$$
+
+-- Hvernig gögnin voru sett inn í töfluna í byrjun
+
+CREATE DEFINER=`2308982439`@`%` PROCEDURE `DisplayTopScore`()
+begin
+	select * from TopPlayers order by playerPoints desc;
+end$$
+
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -31,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `topplayers` (
   `playerName` varchar(75) DEFAULT NULL,
   `playerPoints` int(11) DEFAULT NULL,
   PRIMARY KEY (`playerID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
 
 --
 -- Dumping data for table `topplayers`
@@ -40,41 +88,15 @@ CREATE TABLE IF NOT EXISTS `topplayers` (
 INSERT INTO `topplayers` (`playerID`, `playerName`, `playerPoints`) VALUES
 (1, 'Toggi', 10),
 (2, 'Maggi', 9),
-(3, 'Vigga', 8),
-(4, 'Biggi', 7),
-(5, 'Bogga', 6),
-(6, 'Siggi', 5),
-(7, 'Maggi', 4),
-(8, 'Sigga', 3),
 (11, 'Nigga', 11),
-(12, 'Mani', 5009);
+(12, 'Mani', 5009),
+(13, 'palli', 29887),
+(14, 'mani', 6760),
+(15, 'Alex', 72715),
+(16, 'Alex', 38581),
+(17, 'Alex', 17860),
+(18, 'Alex', 66824);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
-########################### PROCEDURES ############################
-#drop procedure if exists AddPlayer $$
-#
-#create procedure AddPlayer(player_name varchar(75),player_points int)
-#begin
-#	declare lowest_points int;
-#    
-#	insert into TopPlayers(playerName,playerPoints)values(player_name,player_points);
-#    
-#    select min(playerPoints) into lowest_points from TopPlayers;
-#    
-#    delete from TopPlayers where playerPoints = lowest_points;
-#end $$
-#
-#drop procedure if exists DisplayTopScore $$
-#create procedure DisplayTopScore()
-#begin
-#	select * from TopPlayers order by playerPoints desc;
-#end $$
-#
-#delimiter ;
-#
-#call AddPlayer('Mani',5009);
-#call DisplayTopScore();
