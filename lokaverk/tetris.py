@@ -119,7 +119,7 @@ class TetrisApp(object):
         if check_collision(self.spilavollur,
                            self.stone,
                            (self.stone_x, self.stone_y)):
-            self.gameover = True
+            self.leik_lokid = True
 
     def init_game(self):
      #   global player_name
@@ -183,7 +183,7 @@ class TetrisApp(object):
             pygame.time.set_timer(pygame.USEREVENT + 1, newdelay)
 
     def move(self, delta_x):
-        if not self.gameover and not self.paused:
+        if not self.leik_lokid and not self.paused:
             new_x = self.stone_x + delta_x
             if new_x < 0:
                 new_x = 0
@@ -200,7 +200,7 @@ class TetrisApp(object):
         sys.exit()
 
     def drop(self, manual):
-        if not self.gameover and not self.paused:
+        if not self.leik_lokid and not self.paused:
             self.score += 1 if manual else 0
             self.stone_y += 1
             if check_collision(self.spilavollur,
@@ -226,12 +226,12 @@ class TetrisApp(object):
         return False
 
     def insta_drop(self):
-        if not self.gameover and not self.paused:
+        if not self.leik_lokid and not self.paused:
             while (not self.drop(True)):
                 pass
 
     def rotate_stone(self):
-        if not self.gameover and not self.paused:
+        if not self.leik_lokid and not self.paused:
             gimme_a_new_stone = snua_rettsaelis(self.stone)
             if not check_collision(self.spilavollur,
                                    gimme_a_new_stone,
@@ -243,9 +243,9 @@ class TetrisApp(object):
 
 ######### Run the goddamn game already ;) ###################################
     def start_game(self):
-        if self.gameover:
+        if self.leik_lokid:
             self.init_game()
-            self.gameover = False
+            self.leik_lokid = False
 
     def run(self):
      #   global player_name
@@ -260,15 +260,15 @@ class TetrisApp(object):
             'RETURN': self.insta_drop # thetta er enter takkinn,
         }
 
-        self.gameover = False
+        self.leik_lokid = False
         self.paused = False
 
-        dont_burn_my_cpu = pygame.time.Clock()
+        plz_no_lag = pygame.time.Clock()
         while 1:
             self.screen.fill((0, 0, 0))
-            if self.gameover:
+            if self.leik_lokid:
                 self.center_msg("""Leik Lokid!\nStigin thin: %d
-Yttu a space til ad halda afram""" % self.score)
+Yttu a space til ad halda afram eda\n ESCAPE til ad enda leik""" % self.score)
             #    player_score = self.score
             #    global player_score
             #    con.InsertExample(player_name, player_score)
@@ -305,7 +305,7 @@ Yttu a space til ad halda afram""" % self.score)
                                                      + key):
                             key_actions[key]()
 
-            dont_burn_my_cpu.tick(Manar_a_sek)
+            plz_no_lag.tick(Manar_a_sek)
 
 
 if __name__ == '__main__':
