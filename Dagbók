@@ -38,3 +38,6 @@ Database tenging loksins tengist rétt og virkar. Unnið við að tengja almenni
 2.12.2016
 Haldið áfram með sama, vinna með tengingu á milli database og python. Búa til procedures þannig það auðveldi 
 notkun og virkni inni í pyhton
+
+4.12.2016
+Hreinsa kóðann til að láta hann líta betur út og svo að það væri auðveldara að lesa kóðann
