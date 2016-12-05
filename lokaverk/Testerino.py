@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 
+
 class Connection:
     def CheckConnection(self):
         cnx = mysql.connector.connect(user='2308982439', password='mypassword', host='tsuts.tskoli.is',
@@ -17,13 +18,13 @@ class Connection:
         else:
             cnx.close()
 
-    def InsertExample(self):
+    def InsertExample(self, player_name, score):
         cnx = mysql.connector.connect(user='2308982439', password='mypassword', host='tsuts.tskoli.is',
                                       database='2308982439_lokaverk_2016h')
 
         cursor = cnx.cursor()
-        query = "INSERT INTO `topplayers`(`playerID`, `playerName`, `playerScore`) VALUES('','','');"
-        cursor.execute(query)
+        query = "Call AddPlayer('" + player_name + "', " + str(score) + ");" #kallar i functionid AddPlayer sem eydir
+        cursor.execute(query)                                                #notandanum sem er med minnstu stigin.
         cnx.commit()
         cursor.close()
         cnx.close()
@@ -41,39 +42,7 @@ class Connection:
         cursor.close()
         cnx.close()
 
-
         return result
 
 
 con = Connection()
-texti = con.Display()
-for x in texti:
-    print(x)
-
-#SET SQL_SAFE_UPDATES = 0;
-
-
-#drop procedure if exists AddPlayer $$
-
-#create procedure AddPlayer(player_name varchar(10),player_points int)
-#begin
-#	declare lowest_points int;
-    
-#	insert into TopPlayers(playerName,playerPoints)values(player_name,player_points);
-    
-#    select min(playerPoints) into lowest_points from TopPlayers;
-    
-#    if count(playerName) > 9 then
-#    delete from TopPlayers where playerPoints = lowest_points;
-#    end if;
-#end $$
-
-
-#drop procedure if exists DisplayTopScore $$
-
-#create procedure DisplayTopScore()
-#begin
-#	select * from TopPlayers order by playerPoints desc;
-#end $$
-
-#delimiter ;
