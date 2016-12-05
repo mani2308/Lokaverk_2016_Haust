@@ -1,8 +1,8 @@
 from random import randrange as rand
-from Testerino import Connection
+#from Testerino import Connection
 import pygame, sys
 
-con = Connection()
+#con = Connection()
 # Controles:
 #       Down - Kubbarnir fara hradar nidur
 # Left/Right - Faerir Kubbinn/ana til haegri/vinstri
@@ -16,7 +16,7 @@ cellular_size = 18
 dalkar = 10
 radir = 22
 Manar_a_sek = 30
-Sent = False
+#Sent = False
 
 pygame.init()
 
@@ -99,9 +99,9 @@ def nyr_spilavollur():
 
 class GameOfTetris(object):
     def __init__(self):
-        global player_name
+       # global player_name
         pygame.init()
-        player_name = raw_input("What is your name?")  # bidur leikmanninn um nafn
+       # player_name = raw_input("What is your name?")  # bidur leikmanninn um nafn
         pygame.key.set_repeat(250, 25)
         self.breidd = cellular_size * (dalkar + 6)
         self.haed = cellular_size * radir
@@ -129,17 +129,23 @@ class GameOfTetris(object):
             self.leik_lokid = True
 
     def init_game(self):
+<<<<<<< HEAD
 
         pygame.mixer.music.play(-1)
 
         global player_name
+=======
+      #  global player_name
+        pygame.mixer.music.play(-1)
+
+>>>>>>> origin/master
         self.spilavollur = nyr_spilavollur()
         self.gimme_a_new_stone()
         self.level = 1
         self.score = 0
         self.lines = 0
         pygame.time.set_timer(pygame.USEREVENT + 1, 1000)
-        Sent = False
+      #  Sent = False
 
     def disp_msg(self, msg, topleft):
         x, y = topleft
@@ -258,7 +264,7 @@ class GameOfTetris(object):
             self.leik_lokid = False
 
     def run(self):
-        global player_name, player_score, Sent
+      #  global player_name, player_score, Sent
         key_actions = {
             'ESCAPE': self.enda_leik,
             'LEFT': lambda: self.move(-1),
@@ -279,10 +285,10 @@ class GameOfTetris(object):
             if self.leik_lokid:
                 self.center_msg("""Leik Lokid!\nStigin thin: %d
 Yttu a space til ad halda afram eda\n ESCAPE til ad enda leik""" % self.score)
-                if Sent == False:
-                    player_score = self.score
-                    con.InsertExample(player_name, player_score)
-                    Sent = True
+               # if Sent == False:
+                #    player_score = self.score
+                 #   con.InsertExample(player_name, player_score)
+                  #  Sent = True
 
             else:
                 if self.paused:
