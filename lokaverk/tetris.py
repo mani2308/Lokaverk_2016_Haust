@@ -125,6 +125,9 @@ class GameOfTetris(object):
             self.leik_lokid = True
 
     def init_game(self):
+
+        pygame.mixer.music.play(-1)
+
         global player_name
         self.spilavollur = nyr_spilavollur()
         self.gimme_a_new_stone()
