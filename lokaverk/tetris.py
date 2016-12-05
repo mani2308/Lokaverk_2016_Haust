@@ -18,6 +18,10 @@ radir = 22
 Manar_a_sek = 30
 Sent = False
 
+pygame.init()
+
+pygame.mixer.music.load("tetrisb.mid")
+
 litir = [
     (0, 0, 0),
     (255, 85, 85),
