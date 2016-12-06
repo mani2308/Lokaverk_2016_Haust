@@ -1,6 +1,9 @@
+# coding=utf-8
 from random import randrange as rand
-from Testerino import Connection # Tekur inn Connection fra Testerino.py til að fa connection vid database
-import pygame, sys               # Importar inn pygame og sys semer notað aðeins neðar i koðanum
+from Testerino import Connection
+# Tekur inn Connection fra Testerino.py til að fa connection vid database
+import pygame, sys
+# Importar inn pygame og sys semer notað aðeins neðar i koðanum
 
 
 con = Connection()              # Byr til breytu fyrir Connection()
