@@ -21,7 +21,7 @@ Sent = False
 
 pygame.init()
 
-pygame.mixer.music.load("tetrisb.mid")
+pygame.mixer.music.load("tetrisb.mid") #loadar inn tetris lagid
 
 litir = [
     (0, 0, 0),
@@ -32,7 +32,7 @@ litir = [
     (50, 120, 52),
     (146, 202, 73),
     (150, 161, 218),
-    (35, 35, 35)  # Litur fyrir background grid
+    (35, 35, 35)  # Litir fyrir leikinn
 ]
 
 # Skilgreinir formin a "kubbunum"
@@ -60,13 +60,13 @@ tetris_form = [
 
 
 
-def snua_rettsaelis(form):
+def snua_rettsaelis(form): # skilgreinir hvernig a ad snua kubbunum til haegri
     return [[form[y][x]
              for y in xrange(len(form))]
             for x in xrange(len(form[0]) - 1, -1, -1)]
 
 
-def check_collision(spilavollur, form, offset):
+def check_collision(spilavollur, form, offset): # her athugar kodinn hvort kubbarnir seu "lentir a odrum kubbum eda golfinu"
     off_x, off_y = offset
     for cy, row in enumerate(form):
         for cx, cell in enumerate(row):
@@ -78,7 +78,7 @@ def check_collision(spilavollur, form, offset):
     return False
 
 
-def remove_dis_row(spilavollur, row):
+def remove_dis_row(spilavollur, row): # ef leikmadur hefur fyllt ut linuna/rodina
     del spilavollur[row]
     return [[0 for i in xrange(dalkar)]] + spilavollur
 
@@ -109,13 +109,13 @@ class GameOfTetris(object):
         self.rlim = cellular_size * dalkar
         self.bground_grid = [[8 if x % 2 == y % 2 else 0 for x in xrange(dalkar)] for y in xrange(radir)]
 
-        self.default_font = pygame.font.Font(
+        self.default_font = pygame.font.Font(        #loadar fontid fyri leikinn
             pygame.font.get_default_font(), 12)
 
-        self.screen = pygame.display.set_mode((self.breidd, self.haed))
-        pygame.event.set_blocked(pygame.MOUSEMOTION)                    #blockar fyrir musina
+        self.screen = pygame.display.set_mode((self.breidd, self.haed)) #tvi vid notum vid ekki musina ad tha
+        pygame.event.set_blocked(pygame.MOUSEMOTION)                    #blockum vid fyrir musina
 
-        self.next_stone = tetris_form[rand(len(tetris_form))]
+        self.next_stone = tetris_form[rand(len(tetris_form))]           #loadar inn naesta stein/kubbb
         self.init_game()
 
     def gimme_a_new_stone(self):
@@ -205,7 +205,7 @@ class GameOfTetris(object):
                 self.stone_x = new_x
 
     def enda_leik(self):
-        self.center_msg("Endar leik...")
+        self.center_msg("Endar leik...")                # Endar leikinn :)
         pygame.display.update()
         sys.exit()
 
@@ -236,66 +236,66 @@ class GameOfTetris(object):
         return False
 
     def insta_drop(self):
-        if not self.leik_lokid and not self.paused:
+        if not self.leik_lokid and not self.paused:       # insta dropar kubbunum ef ytt er a Enter
             while (not self.drop(True)):
                 pass
 
     def rotate_stone(self):
         if not self.leik_lokid and not self.paused:
-            gimme_a_new_stone = snua_rettsaelis(self.stone)
+            gimme_a_new_stone = snua_rettsaelis(self.stone)         #snyr kubbunum
             if not check_collision(self.spilavollur,
                                    gimme_a_new_stone,
                                    (self.stone_x, self.stone_y)):
                 self.stone = gimme_a_new_stone
 
-    def toggle_pause(self):
+    def toggle_pause(self):                                         #pasar leikinn ef ytt er a p
         self.paused = not self.paused
 
 ######### Run the goddamn game already -Mani ;) ###################################
     def start_game(self):
         if self.leik_lokid:
-            self.init_game()
+            self.init_game()                    # startar leiknum
             self.leik_lokid = False
 
     def run(self):
-        global player_name, player_score, Sent
+        global player_name, player_score, Sent # breytur til ad setja inn i db
         key_actions = {
-            'ESCAPE': self.enda_leik,
-            'LEFT': lambda: self.move(-1),
-            'RIGHT': lambda: self.move(+1),
-            'DOWN': lambda: self.drop(True),
-            'UP': self.rotate_stone,
-            'p': self.toggle_pause,
-            'SPACE': self.start_game,
-            'RETURN': self.insta_drop # thetta er enter takkinn,
+            'ESCAPE': self.enda_leik,           # Ef ytt er a escape og leikurinn endar
+            'LEFT': lambda: self.move(-1),      # Ef ytt er a vintri orva takkann og kubburinn faerist 1 flot til vinstri
+            'RIGHT': lambda: self.move(+1),     # Ef ytt er a haegri orva takkann og kubburinn faerist 1 flot til haegri
+            'DOWN': lambda: self.drop(True),    # Ef ytt er a nidur orva takkann og kubburinn fer hradar nidur, leikmadur faer fleiri stig fyrir thad
+            'UP': self.rotate_stone,            # Ef ytt er a upp orva takkann ad tha snyst kubburinn 90 gradur til haegri
+            'p': self.toggle_pause,             # Ef ytt er a 'p' takkann tha pasast leikurinn
+            'SPACE': self.start_game,           # Ef ytt er a space takkann tha byrjar leikurinn aftur eftir ad leikmadur tapar
+            'RETURN': self.insta_drop           # Ef ytt er a Enter takkann tha insta droppar kubburinn
         }
 
-        self.leik_lokid = False
-        self.paused = False
+        self.leik_lokid = False                 # a medan leik er ekki lokid
+        self.paused = False                     # a medan leikur er ekki pasadur
 
         plz_no_lag = pygame.time.Clock()
         while 1:
             self.screen.fill((0, 0, 0))
             if self.leik_lokid:
                 self.center_msg("""Leik Lokid!\nStigin thin: %d
-Yttu a space til ad halda afram eda\n ESCAPE til ad enda leik""" % self.score)
+Yttu a space til ad halda afram eda\n ESCAPE til ad enda leik""" % self.score) # Outputtid a tap skjanum
                 if Sent == False:
                     player_score = self.score
-                    con.InsertExample(player_name, player_score)
-                    Sent = True
+                    con.InsertExample(player_name, player_score) # Sendir gognin inn i Testerino.py
+                    Sent = True                                  # Breytist i True ef gognin voru send og tha eru thau ekki send aftur a medan leikurinn er i gangi
 
             else:
                 if self.paused:
                     self.center_msg("""Leikur pasadur
-                    Yttu a 'p' til ad halda afram""")
+                    Yttu a 'p' til ad halda afram""") # Skjarinn sem leikmadur ser ef hann pasar leikinn
                 else:
                     pygame.draw.line(self.screen,
                                      (255, 255, 255),
                                      (self.rlim + 1, 0),
-                                     (self.rlim + 1, self.haed - 1))
-                    self.disp_msg("Next up:", (self.rlim + cellular_size, 2))
+                                     (self.rlim + 1, self.haed - 1))            # Thad sem leikmadur ser thegar leikurinn er i gangi
+                    self.disp_msg("Next up:", (self.rlim + cellular_size, 2))   # Synir leikmanni hvada kubbur kemur naest(mjog thaegilegt ;))
                     self.disp_msg("Stig: %d\n\nBord: %d\
-\nLinur: %d" % (self.score, self.level, self.lines),
+\nLinur: %d" % (self.score, self.level, self.lines),                            # Synir leikmanni hvada "Level" hann se i og "scorid" hans
                                   (self.rlim + cellular_size, cellular_size * 5))
                     self.teikna_voll(self.bground_grid, (0, 0))
                     self.teikna_voll(self.spilavollur, (0, 0))
