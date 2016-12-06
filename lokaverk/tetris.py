@@ -1,9 +1,9 @@
 from random import randrange as rand
-from Testerino import Connection
-import pygame, sys
+from Testerino import Connection # Tekur inn Connection fra Testerino.py til að fa connection vid database
+import pygame, sys               # Importar inn pygame og sys semer notað aðeins neðar i koðanum
 
 
-con = Connection()
+con = Connection()              # Byr til breytu fyrir Connection()
 # Controles:
 #       Down - Kubbarnir fara hradar nidur
 # Left/Right - Faerir Kubbinn/ana til haegri/vinstri
